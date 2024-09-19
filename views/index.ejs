@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Huppy - A Community for Dog Lovers</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <% if (!token) { %>
+          <li><a href="auth/signup">Sign Up</a></li>
+          <li><a href="auth/login">Login</a></li>
+        <% } else { %>
+          <li><a href="/posts/new">Create Post</a></li>
+          <li><a href="/logout">Logout</a></li>
+        <% } %>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="hero">
+    <div class="hero-content">
+      <h1>Welcome to Huppy!</h1>
+      <p>Join the ultimate community for dog lovers where tails wag and hearts melt. At Huppy, we celebrate everything about our four-legged friends. Whether you're here to find a new furry companion, share adorable pictures, or simply chat with fellow dog enthusiasts, Huppy is the place to be!</p>
+      <% if (!token) { %>
+        <a href="auth/signup" class="cta-button">Join the Pack</a>
+      <% } %>
+    </div>
+  </section>
+
+  <main>
+    <section id="about">
+      <h2>About Huppy</h2>
+      <p>Huppy was born out of a love for dogs and a desire to connect dog owners, breeders, and puppy enthusiasts from around the world. Our mission is to build a vibrant and supportive community where users can:</p>
+      <ul>
+        <li><strong>Discover adorable puppies:</strong> Browse a vast gallery of the cutest puppies up for adoption and sale.</li>
+        <li><strong>Share your dog’s journey:</strong> Post pictures of your puppies or dogs, share their stories, and watch them grow in the spotlight.</li>
+        <li><strong>Connect with dog lovers:</strong> Comment, like, and engage with other users’ posts, offering advice, praise, or just sharing your love for dogs.</li>
+        <li><strong>Stay updated:</strong> Find and follow breeders or other dog lovers, and never miss out on the latest puppy listings or adorable snapshots.</li>
+      </ul>
+      <p>We believe that every dog deserves love, and every dog lover deserves a place to celebrate that love. Huppy is here to make that happen.</p>
+    </section>
+
+    <section id="features">
+      <h2>What You Can Do on Huppy</h2>
+      <div class="feature-list">
+        <div class="feature-item">
+          <img src="/images/feature1.jpg" alt="User posting and sharing dog pictures" class="feature-image">
+          <h3>Post & Share</h3>
+          <p>Upload pictures of your puppies or dogs. Share their stories, funny moments, or even put them up for sale or adoption. Spread the joy with the community!</p>
+        </div>
+        <div class="feature-item">
+          <img src="/images/feature2.jpg" alt="User liking and commenting on posts" class="feature-image">
+          <h3>Like & Comment</h3>
+          <p>Interact with posts you love! Whether it’s a thumbs up or a heartfelt comment, let the dog owners know how much you appreciate their posts.</p>
+        </div>
+        <div class="feature-item">
+          <img src="/images/feature3.jpg" alt="User finding puppies for adoption" class="feature-image">
+          <h3>Find a Furry Friend</h3>
+          <p>Looking to add a new member to your family? Browse available puppies, check their profiles, and connect with breeders or current owners. Your perfect companion is just a click away.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="posts">
+      <h2>Latest Posts from Our Community</h2>
+      <div class="post-list">
+        <% posts.forEach(post => { %>
+          <div class="post-item">
+            <img src="<%= post.imageUrl %>" alt="Post by <%= post.postedBy.username %>" class="post-image">
+            <div class="post-content">
+              <h3><%= post.postedBy.username %></h3>
+              <p><%= post.description %></p>
+              <p><strong>Likes:</strong> <%= post.likes.length %></p>
+              <form action="/posts/<%= post._id %>/like" method="POST">
+                <button type="submit">Like</button>
+              </form>
+              <form action="/posts/<%= post._id %>/comment" method="POST">
+                <input type="text" name="comment" placeholder="Add a comment" required>
+                <button type="submit">Comment</button>
+              </form>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Huppy - Bringing Dog Lovers Together</p>
+  </footer>
+</body>
+</html>
