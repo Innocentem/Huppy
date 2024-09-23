@@ -39,7 +39,7 @@ To set up the project locally, follow these steps:
 
     Open your browser and visit http://localhost:3000 to see the app in action.
     
-Usage
+## Usage
 
 Once the application is running, you can:
 
@@ -48,7 +48,7 @@ Once the application is running, you can:
     Post pictures of your dogs and puppies.
     Like and comment on posts made by other users.
     
-Technologies
+## Technologies
 
     Node.js: For the backend server.
     Express: Web framework for Node.js.
@@ -56,14 +56,15 @@ Technologies
     EJS: Templating engine for rendering HTML views.
     JSON Web Tokens: For secure user authentication.
     
-Contributing
+## Contributing
 
 Contributions are welcome! If you have suggestions for improvements or new features, please fork the repository and submit a pull request.
 
-License
+## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
-Author
+
+## Author
 
 Innocent Mwebaze
 GitHub: Innocentem
