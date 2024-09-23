@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <title>Huppy - A Community for Dog Lovers</title>
     <link rel="stylesheet" href="css/main.css" />
-    <noscript><link rel="stylesheet" href="/css/noscript.css" /></noscript>
+    <link rel="stylesheet" href="css/main2.css" />
+    <noscript><link rel="stylesheet" href="css/noscript.css" /></noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body class="is-preload">
 
@@ -14,11 +16,11 @@
 
         <!-- Intro -->
         <div id="intro">
-            <h1>Welcome to<br />Huppy!</h1>
-            <p>Join the ultimate community for dog lovers where tails wag and hearts melt. At Huppy, we celebrate everything about our four-legged friends.</p>
+            <h1>This is<br />Huppy!</h1>
+            <p>Where tails wag and hearts melt. Share, connect, and celebrate with true dog lovers!</p>
             <% if (!token) { %>
                 <ul class="actions">
-                    <li><a href="auth/signup" class="button icon solid solo fa-arrow-down">Join the Pack</a></li>
+                    <li><a href="#" id="signup-link" class="button icon solid solo fa-arrow-down">Join the Pack</a></li>
                 </ul>
             <% } %>
         </div>
@@ -33,8 +35,8 @@
             <ul class="links">
                 <li class="active"><a href="/">Home</a></li>
                 <% if (!token) { %>
-                    <li><a href="auth/signup">Sign Up</a></li>
-                    <li><a href="auth/login">Login</a></li>
+                    <li><a href="#" id="signup-link-nav">Sign Up</a></li>
+                    <li><a href="#" id="login-link">Login</a></li> <!-- Trigger to open login modal -->
                 <% } else { %>
                     <li><a href="/posts/new">Create Post</a></li>
                     <li><a href="/logout">Logout</a></li>
@@ -51,64 +53,101 @@
         <!-- Main -->
         <div id="main">
 
-            <!-- About Section -->
-            <section id="about">
-                <h2>About Huppy</h2>
-                <p>Huppy was born out of a love for dogs and a desire to connect dog owners, breeders, and puppy enthusiasts from around the world.</p>
-                <ul>
-                    <li><strong>Discover adorable puppies:</strong> Browse a vast gallery of the cutest puppies up for adoption and sale.</li>
-                    <li><strong>Share your dog’s journey:</strong> Post pictures of your puppies or dogs, share their stories, and watch them grow in the spotlight.</li>
-                    <li><strong>Connect with dog lovers:</strong> Comment, like, and engage with other users’ posts, offering advice, praise, or just sharing your love for dogs.</li>
-                    <li><strong>Stay updated:</strong> Find and follow breeders or other dog lovers, and never miss out on the latest puppy listings or adorable snapshots.</li>
+            <!-- Featured Post -->
+            <article class="post featured">
+                <header class="major">
+                    <span class="date"><i class="fas fa-paw"></i>huppy</span>
+                    <h2><a href="#">Don't be shy, be doggy</a></h2>
+                    <p>Discover a vibrant community for dog lovers. Share stories, pictures, and connect with fellow enthusiasts.</p>
+                </header>
+                <a href="#" class="image fit"><img src="/images/grp.png" alt="puppyz" /></a>
+                <ul class="actions special">
+                    <li><a href="#" class="button large">About us</a></li>
                 </ul>
-                <p>We believe that every dog deserves love, and every dog lover deserves a place to celebrate that love. Huppy is here to make that happen.</p>
+            </article>
+
+            <!-- Posts Section -->
+            <section class="posts">
+                <article>
+                    <header>
+                        <span class="date"><i class="fas fa-paw"></i> huppy</span>
+                        <h2><a href="#">Post & Share</a></h2>
+                    </header>
+                    <a href="#" class="image fit"><img src="/images/dog2.png" alt="User posting and sharing dog pictures"></a>
+                    <p>Upload pictures of your puppies or dogs. Share their stories, funny moments, or even put them up for sale or adoption.</p>
+                    <ul class="actions special">
+                        <li><a href="#" class="button">Full Story</a></li>
+                    </ul>
+                </article>
+                <article>
+                    <header>
+                        <span class="date"><i class="fas fa-paw"></i>huppy</span>
+                        <h2><a href="#">Like & Comment</a></h2>
+                    </header>
+                    <a href="#" class="image fit"><img src="/images/wow.png" alt="User liking and commenting on posts"></a>
+                    <p>Interact with posts you love! Whether it’s a thumbs up or a heartfelt comment, let the dog owners know how much you appreciate their posts.</p>
+                    <ul class="actions special">
+                        <li><a href="#" class="button">Full Story</a></li>
+                    </ul>
+                </article>
+                <article>
+                    <header>
+                        <span class="date"><i class="fas fa-paw"></i>huppy</span>
+                        <h2><a href="#">Adopt a Puppy</a></h2>
+                    </header>
+                    <a href="#" class="image fit"><img src="/images/dog.png" alt="User finding puppies for adoption"></a>
+                    <p>Looking to add a new member to your family? Browse available puppies, check their profiles, and connect with breeders or current owners.</p>
+                    <ul class="actions special">
+                        <li><a href="#" class="button">Find Puppies</a></li>
+                    </ul>
+                </article>
+                <article>
+                    <header>
+                        <span class="date"><i class="fas fa-paw"></i>huppy</span>
+                        <h2><a href="#">Blog</a></h2>
+                    </header>
+                    <a href="#" class="image fit"><img src="/images/blog.png" alt="User finding puppies for adoption"></a>
+                    <p>Checkout our blog for the latest news and updates on the community.</p>
+                    <ul class="actions special">
+                        <li><a href="#" class="button">Blog Post</a></li>
+                    </ul>
+                </article>
             </section>
 
-            <!-- Features Section -->
-            <section id="features">
-                <h2>What You Can Do on Huppy</h2>
-                <div class="feature-list">
-                    <div class="feature-item">
-                        <img src="/images/groupie1.jp" alt="User posting and sharing dog pictures" class="feature-image">
-                        <h3>Post & Share</h3>
-                        <p>Upload pictures of your puppies or dogs. Share their stories, funny moments, or even put them up for sale or adoption. Spread the joy with the community!</p>
+            <!-- Signup Section -->
+            <section id="signup-section" style="display: none;"> <!-- Hidden initially -->
+                <h1>Sign Up for Huppy</h1>
+
+                <% if (error) { %>
+                    <div class="error-message">
+                        <p><%= error %></p>
                     </div>
-                    <div class="feature-item">
-                        <img src="/images/feature2.jpg" alt="User liking and commenting on posts" class="feature-image">
-                        <h3>Like & Comment</h3>
-                        <p>Interact with posts you love! Whether it’s a thumbs up or a heartfelt comment, let the dog owners know how much you appreciate their posts.</p>
+                <% } %>
+
+                <form action="/auth/signup" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" name="username" id="username" placeholder="Choose a username" required aria-required="true">
                     </div>
-                    <div class="feature-item">
-                        <img src="/images/feature3.jpg" alt="User finding puppies for adoption" class="feature-image">
-                        <h3>Find a Furry Friend</h3>
-                        <p>Looking to add a new member to your family? Browse available puppies, check their profiles, and connect with breeders or current owners. Your perfect companion is just a click away.</p>
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" name="email" id="email" placeholder="Enter your email" required aria-required="true">
                     </div>
-                </div>
+
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" name="password" id="password" placeholder="Create a password" required aria-required="true">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit">Sign Up</button>
+                    </div>
+                </form>
+
+                <p>Already have an account? <a href="#" id="login-modal-trigger">Login here</a></p> <!-- Trigger for login modal -->
             </section>
 
-            <!-- Latest Posts Section -->
-            <section id="posts">
-                <h2>Latest Posts from Our Community</h2>
-                <div class="post-list">
-                    <% posts.forEach(post => { %>
-                        <div class="post-item">
-                            <img src="<%= post.imageUrl %>" alt="Post by <%= post.postedBy.username %>" class="post-image">
-                            <div class="post-content">
-                                <h3><%= post.postedBy.username %></h3>
-                                <p><%= post.description %></p>
-                                <p><strong>Likes:</strong> <%= post.likes.length %></p>
-                                <form action="/posts/<%= post._id %>/like" method="POST">
-                                    <button type="submit">Like</button>
-                                </form>
-                                <form action="/posts/<%= post._id %>/comment" method="POST">
-                                    <input type="text" name="comment" placeholder="Add a comment" required>
-                                    <button type="submit">Comment</button>
-                                </form>
-                            </div>
-                        </div>
-                    <% }); %>
-                </div>
-            </section>
         </div>
 
         <!-- Footer -->
@@ -120,14 +159,15 @@
 
     </div>
 
-    <!-- Scripts -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.scrollex.min.js"></script>
-    <script src="js/jquery.scrolly.min.js"></script>
-    <script src="js/browser.min.js"></script>
-    <script src="js/breakpoints.min.js"></script>
-    <script src="js/util.js"></script>
-    <script src="js/main.js"></script>
+     <!-- Scripts -->
+     <script src="js/jquery.min.js"></script>
+     <script src="js/jquery.scrollex.min.js"></script>
+     <script src="js/jquery.scrolly.min.js"></script>
+     <script src="js/browser.min.js"></script>
+     <script src="js/breakpoints.min.js"></script>
+     <script src="js/util.js"></script>
+     <script src="js/main.js"></script>
+     <script src="js/custom.js"></script>
 
 </body>
 </html>

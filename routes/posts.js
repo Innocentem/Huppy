@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     try {
         const posts = await Post.find().populate('postedBy').exec();
         const token = req.cookies.token; // Assuming you're using cookies for the token
-        res.render('index', { posts, token });
+        res.render('index', { posts, token, error: null });  // Pass error as null when there is no error
     } catch (err) {
         console.error('Error fetching posts:', err);
         res.status(500).send('Error fetching posts');
