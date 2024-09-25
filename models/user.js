@@ -1,31 +1,33 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
-const userSchema = new mongoose.Schema({
-    username: { type: String, required: true },
-    passwordHash: { type: String, required: true },
-    email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ }, // Email format validation
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-    likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
+// Define the User Schema
+const UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,  // Ensure each username is unique
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,  // Ensure each email is unique
+  },
+  password: {
+    type: String,
+    required: true, // Hashed password stored here
+  },
+  profileImage: {
+    type: String, // Path or URL to the user's profile picture
+    default: '/images/default-profile.png', // Default profile image if none is uploaded
+  },
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post' // Reference to the Post model
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now // When the user was created
+  }
 });
 
-// Pre-save hook for password hashing
-userSchema.pre('save', async function(next) {
-    if (this.isModified('passwordHash')) { // Check for passwordHash instead
-        this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
-        this.password = undefined; // Remove plain-text password field after hashing
-    }
-    next();
-});
-
-// Custom method to set the password
-userSchema.methods.setPassword = async function(password) {
-    this.passwordHash = await bcrypt.hash(password, 10);
-};
-
-// Custom method to validate the password
-userSchema.methods.isValidPassword = async function(password) {
-    return await bcrypt.compare(password, this.passwordHash);
-};
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', UserSchema);

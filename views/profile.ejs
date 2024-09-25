@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= user.username %>'s Profile | Huppy</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <h2>Welcome, <%= user.username %>!</h2>
+        <a href="/logout">Logout</a>
+    </header>
+    
+    <div class="profile-container">
+        <div class="profile-info">
+            <img src="<%= user.profilePicture %>" alt="Profile Picture">
+            <p><strong>Username:</strong> <%= user.username %></p>
+            <p><strong>Email:</strong> <%= user.email %></p>
+        </div>
+
+        <!-- Option to add a new post -->
+        <div class="add-post">
+            <h3>Add a Dog for Sale</h3>
+            <form action="/posts/new" method="POST" enctype="multipart/form-data">
+                <input type="text" name="dogName" placeholder="Dog Name" required>
+                <textarea name="description" placeholder="Description" required></textarea>
+                <input type="number" name="price" placeholder="Price" required>
+                <input type="file" name="image" required>
+                <button type="submit">Add Dog</button>
+            </form>
+        </div>
+
+        <!-- List of user posts -->
+        <div class="user-posts">
+            <h3>Your Posts</h3>
+            <% user.posts.forEach(post => { %>
+                <div class="post">
+                    <h4><%= post.dogName %></h4>
+                    <p><%= post.description %></p>
+                    <p><strong>Price:</strong> $<%= post.price %></p>
+                    <img src="<%= post.image %>" alt="<%= post.dogName %>">
+                    <form action="/posts/<%= post._id %>/delete" method="POST">
+                        <button type="submit">Delete Post</button>
+                    </form>
+                    <% if (!post.isSold) { %>
+                        <form action="/posts/<%= post._id %>/mark-sold" method="POST">
+                            <button type="submit">Mark as Sold</button>
+                        </form>
+                    <% } else { %>
+                        <p><em>Sold</em></p>
+                    <% } %>
+                </div>
+            <% }) %>
+        </div>
+
+        <!-- Notifications for messages and post reactions -->
+        <div class="notifications">
+            <h3>Notifications</h3>
+            <!-- Logic to list notifications -->
+        </div>
+    </div>
+    <!-- Send Message Form -->
+<div class="send-message">
+    <h3>Send a Message to <%= user.username %></h3>
+    <form action="/messages/send" method="POST">
+        <input type="hidden" name="receiverId" value="<%= user._id %>">
+        <textarea name="content" placeholder="Write a message..." required></textarea>
+        <button type="submit">Send</button>
+    </form>
+</div>
+</body>
+</html>

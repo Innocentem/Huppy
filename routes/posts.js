@@ -1,90 +1,106 @@
 const express = require('express');
-const Post = require('../models/post');
-const isAuthenticated = require('../middleware/auth');
-const multer = require('multer');
-const upload = multer({ dest: 'public/images/' }); // For image uploads
 const router = express.Router();
+const Post = require('../models/post');
+const { ensureAuthenticated } = require('../config/auth');
 
-// Display posts on landing page
-router.get('/', async (req, res) => {
-    try {
-        const posts = await Post.find().populate('postedBy').exec();
-        const token = req.cookies.token; // Assuming you're using cookies for the token
-        res.render('index', { posts, token, error: null });  // Pass error as null when there is no error
-    } catch (err) {
-        console.error('Error fetching posts:', err);
-        res.status(500).send('Error fetching posts');
-    }
+// Create a new post
+router.post('/new', ensureAuthenticated, async (req, res) => {
+  const { dogName, description, price } = req.body;
+  const image = req.file.path; // Assuming image upload is handled elsewhere
+  try {
+    const newPost = new Post({
+      owner: req.user._id,
+      dogName,
+      description,
+      price,
+      image
+    });
+    await newPost.save();
+    req.flash('success_msg', 'Dog posted successfully');
+    res.redirect('/profile');
+  } catch (error) {
+    console.error(error);
+    req.flash('error_msg', 'Failed to post');
+    res.redirect('/profile');
+  }
 });
 
-// Render new post form
-router.get('/new', isAuthenticated, (req, res) => {
-    res.render('post');
+// Delete a post
+router.post('/:id/delete', ensureAuthenticated, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (post.owner.toString() === req.user._id.toString()) {
+      await Post.deleteOne({ _id: req.params.id });
+      req.flash('success_msg', 'Post deleted successfully');
+    } else {
+      req.flash('error_msg', 'Unauthorized to delete this post');
+    }
+    res.redirect('/profile');
+  } catch (error) {
+    console.error(error);
+    res.redirect('/profile');
+  }
 });
 
-// Handle new post creation
-router.post('/', isAuthenticated, upload.single('image'), async (req, res) => {
-    const { description } = req.body;
-    const imageUrl = `/images/${req.file.filename}`;
-
-    // Basic validation
-    if (!description || !req.file) {
-        return res.status(400).send('Description and image are required');
+// Mark a post as sold
+router.post('/:id/mark-sold', ensureAuthenticated, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (post.owner.toString() === req.user._id.toString()) {
+      post.isSold = true;
+      await post.save();
+      req.flash('success_msg', 'Post marked as sold');
+    } else {
+      req.flash('error_msg', 'Unauthorized to mark this post as sold');
     }
+    res.redirect('/profile');
+  } catch (error) {
+    console.error(error);
+    res.redirect('/profile');
+  }
+});
 
+router.post('/:id/like', ensureAuthenticated, async (req, res) => {
     try {
-        const post = new Post({
-            imageUrl,
-            description,
-            postedBy: req.userId
+      const post = await Post.findById(req.params.id);
+      if (!post.likes.includes(req.user._id)) {
+        post.likes.push(req.user._id);
+        await post.save();
+        
+        // Send notification to the post owner
+        const newNotification = new Notification({
+          user: post.owner,
+          message: `${req.user.username} liked your post: ${post.dogName}`
         });
-        await post.save();
-        res.redirect('/');
-    } catch (err) {
-        console.error('Error creating post:', err);
-        res.status(500).send('Error creating post');
+        await newNotification.save();
+      }
+      res.redirect('/');
+    } catch (error) {
+      console.error(error);
+      res.redirect('/');
     }
-});
+  });
 
-// Handle post likes
-router.post('/:id/like', isAuthenticated, async (req, res) => {
-    try {
-        const post = await Post.findById(req.params.id);
-        if (!post) {
-            return res.status(404).send('Post not found');
-        }
-        if (!post.likes.includes(req.userId)) {
-            post.likes.push(req.userId);
-        }
-        await post.save();
-        res.redirect('/');
-    } catch (err) {
-        console.error('Error liking post:', err);
-        res.status(500).send('Error liking post');
-    }
-});
 
-// Handle post comments
-router.post('/:id/comment', isAuthenticated, async (req, res) => {
+  router.post('/:id/comment', ensureAuthenticated, async (req, res) => {
     const { comment } = req.body;
-
-    // Basic validation
-    if (!comment) {
-        return res.status(400).send('Comment cannot be empty');
-    }
-
     try {
-        const post = await Post.findById(req.params.id);
-        if (!post) {
-            return res.status(404).send('Post not found');
-        }
-        post.comments.push({ text: comment, commentedBy: req.userId });
-        await post.save();
-        res.redirect('/');
-    } catch (err) {
-        console.error('Error commenting on post:', err);
-        res.status(500).send('Error commenting on post');
+      const post = await Post.findById(req.params.id);
+      post.comments.push({ user: req.user._id, content: comment });
+      await post.save();
+  
+      // Notify the post owner
+      const newNotification = new Notification({
+        user: post.owner,
+        message: `${req.user.username} commented on your post: ${post.dogName}`
+      });
+      await newNotification.save();
+  
+      res.redirect(`/posts/${post._id}`);
+    } catch (error) {
+      console.error(error);
+      res.redirect('/');
     }
-});
+  });  
 
 module.exports = router;

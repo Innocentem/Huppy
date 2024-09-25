@@ -1,37 +1,51 @@
 const express = require('express');
-const ejs = require('ejs');
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const path = require('path');
-require('dotenv').config(); // Load environment variables from .env file
-
+const flash = require('connect-flash');
+const session = require('express-session');
+const passport = require('passport');
 const app = express();
 
-// Middleware
-app.use(express.json());
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); // Use path.join for consistency
+// Passport config
+require('./config/passport')(passport);
 
-// Set view engine and views directory
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+// MongoDB connection
+mongoose.connect('mongodb://127.0.0.1:27017/huppy', { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/huppy', { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
+// Bodyparser
+app.use(express.urlencoded({ extended: false }));
 
-// Routes
-app.use('/', require('./routes/posts'));
-app.use('/auth', require('./routes/auth'));
+// Express session
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Connect flash
+app.use(flash());
+
+// Global variables
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server is running on http://127.0.0.1:${PORT}`));
+// Routes
+app.use('/', require('./routes/index'));
+app.use('/users', require('./routes/users'));
+
+// Set static folder
+app.use(express.static('public'));
+
+// EJS
+app.set('view engine', 'ejs');
+
+app.listen(3000, () => {
+  console.log('Server started on http://127.0.0.1:3000');
+});

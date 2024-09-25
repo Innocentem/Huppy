@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox | Huppy</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <h2>Your Inbox</h2>
+        <a href="/profile">Back to Profile</a>
+    </header>
+    
+    <div class="inbox-container">
+        <% if (messages.length === 0) { %>
+            <p>No messages yet.</p>
+        <% } else { %>
+            <% messages.forEach(message => { %>
+                <div class="message">
+                    <p><strong>From:</strong> <%= message.sender.username %></p>
+                    <p><%= message.content %></p>
+                    <p><em>Sent at: <%= message.timestamp.toLocaleString() %></em></p>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+</body>
+</html>

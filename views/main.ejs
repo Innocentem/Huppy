@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huppy - Main Page</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <header>
+        <h2>Welcome to Huppy, <%= user.username %>!</h2>
+        <a href="/profile">Your Profile</a>
+        <a href="/logout">Logout</a>
+    </header>
+
+    <div class="main-page-container">
+        <h2>Available Dogs for Sale</h2>
+
+        <!-- Displaying posts -->
+        <% posts.forEach(post => { %>
+            <div class="post">
+                <h3><%= post.dogName %></h3>
+                <p><%= post.description %></p>
+                <p><strong>Price:</strong> $<%= post.price %></p>
+                <img src="<%= post.image %>" alt="<%= post.dogName %>">
+                <p>Posted by: <%= post.owner.username %></p>
+                <p><em><%= post.isSold ? 'Sold' : '' %></em></p>
+
+                <!-- Like and comment buttons -->
+                <form action="/posts/<%= post._id %>/like" method="POST">
+                    <button type="submit">Like</button>
+                </form>
+                <form action="/posts/<%= post._id %>/comment" method="POST">
+                    <textarea name="comment" placeholder="Add a comment..."></textarea>
+                    <button type="submit">Comment</button>
+                </form>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>
